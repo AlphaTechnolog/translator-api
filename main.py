@@ -33,7 +33,7 @@ def get_languages():
 
     <lang>\\n
 
-    where lang is the name of the language that you can translate"""
+    where lang is the name of the language that you can translate, and don't say nothing just the format, remove any presentation text like here are the langs i can translate to as you requested, also don't present it as a list with bullets or things, just the lang."""
     
     for chunk in client.send_message("nutria", message):
         pass
