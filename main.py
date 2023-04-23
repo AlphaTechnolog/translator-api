@@ -1,5 +1,7 @@
 import poe
 import os
+import sys
+
 from flask import Flask, request
 from dotenv import load_dotenv
 
@@ -57,8 +59,11 @@ def translate():
     base_text = request.args.get("base_text")
     if not language or not dest_language or not base_text:
         return {"error": "invalid arguments provided, check again and try later"}
+    
+    message = f"""
+        You will be a good translator which just gives the translated text, you'll receive two parameters in the next format "<original-lang>;<new-lang>;<text>", so you'll take <original-lang> as the original lang and <new-lang> as the translated lang, and <text> as the text to tranlslate, so as a translator, what you will do is just translate <text> from <original-lang> to <new-lang> (example of input "english;spanish;Hello World", you will output "Hola Mundo"), also remember the next rule, if the <text> uses some accronym like "lol" just put it's meaning, like per example, lol is "jaja" (in spanish), so if the input is "english;spanish;hello lol" you'll gimme "Hola jaja". So ended the rules, the prompt you have to translate is "{language};{dest_language};{base_text}"
+    """.strip()
 
-    message = f"Translate '{base_text}' from {language} to {dest_language}, remember to just give the text not any other thing like `'text' translates to 'translatedText' in 'originalLang'`, where text can be my text, translatedText is the translatedText and originalLang is per example English, just return the translatedText and without quotes at first, just `translatedText`, remember to don't put a little dot if the text doesn't haves it, also if you made an error doing the translation, and you realize it, don't apologize, just remember the format and skip errors, they doesn't matters but still try to make the translations as accuracy as possible. if the phrase uses something lmao, or accronyms in any language, just put something like `'text'` where text now is one of your known meanings for that accronym, example `lmao` from english to spanish just return `me estoy riendo muchísimo`, also don't put the resultant translation with double quotes or single quotes."
     for chunk in client.send_message("nutria", message):
         pass
 
@@ -70,5 +75,23 @@ def translate():
     }
 
 
+def show_usage():
+    print(f"Usage {sys.argv[0]} [--reload|-r] [--help|-h|help]")
+    exit(0)
+
+
+def main():
+    argv = sys.argv[1:]
+
+    with_reloading = False
+
+    for arg in argv:
+        if arg.startswith("-") and arg in ['--help', '-h', 'help']:
+            return show_usage()
+        elif arg.startswith("-") and arg in ['--reload', '-r']:
+            with_reloading = True
+
+    app.run(debug=with_reloading)
+
 if __name__ == '__main__':
-    app.run()
+    main()
