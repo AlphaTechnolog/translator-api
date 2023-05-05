@@ -1,0 +1,16 @@
+diff --git a/setup.py b/setup.py
+index 604543b..3d7ea2f 100644
+--- a/setup.py
++++ b/setup.py
+@@ -32,8 +32,8 @@ setuptools.setup(
+   include_package_data=True,
+   install_requires=[
+     "websocket-client",
+-    "requests[socks]",
++    "requests",
+     "python-socks"
+   ],
+   url="https://github.com/ading2210/poe-api"
+-)
+\ No newline at end of file
++)
